@@ -15,9 +15,9 @@ public class Student {
     @Id
     private String id;
 
-    private String name;
-    private String index;
-    private int age;
-
-
+    private String studentName;
+    private String studentAddress;
+    private String age;
+    private String mobile;
+    private String college;
 }

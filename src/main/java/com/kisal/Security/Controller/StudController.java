@@ -1,25 +1,29 @@
 package com.kisal.Security.Controller;
 
 import com.kisal.Security.Model.Student;
+import com.kisal.Security.Model.User;
 import com.kisal.Security.Service.StudentService;
+import com.kisal.Security.Service.UserService;
+
 //import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 //import java.util.ArrayList;
 import java.util.List;
 
 
 @RestController
+@CrossOrigin(origins = "*")
 public class StudController {
 
     @Autowired
     private StudentService studService;
+
+    @Autowired
+    private UserService userService;
 
 //    private List<Student> students = new ArrayList<>(List.of(
 //            new Student("1", "Kisal", "1", 22),
@@ -39,15 +43,22 @@ public class StudController {
 //        return ResponseEntity.ok(students);
 //    }
 
-    @PostMapping("/addStud")
-    public ResponseEntity<Student> addStudent(@RequestBody Student student){
-        return ResponseEntity.ok(studService.saveStudent(student));
+    @PutMapping("/{id}/addStud")
+    public ResponseEntity<Student> addStudent(@RequestBody Student stud , @PathVariable String id){
+        
+        Student student = studService.saveStudent(stud); 
 
+        User user = userService.getUserById(id);
+        user.setStudent(stud);
+        //user.setId(userService.getUser(username).getId());
+        userService.register(user);
+       
+        return ResponseEntity.ok(student);
+        
     }
 
     @GetMapping("/getStuds")
     public ResponseEntity<List<Student>> getStudents(){
-
         return ResponseEntity.ok(studService.fetchStudents());
     }
 
